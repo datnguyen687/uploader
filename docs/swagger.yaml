@@ -1,0 +1,56 @@
+definitions:
+  delivery.BasicResponse:
+    properties:
+      code:
+        type: integer
+      error:
+        type: string
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /v1/ping:
+    get:
+      description: ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/delivery.BasicResponse'
+      summary: ping
+      tags:
+      - healthcheck
+  /v1/user/batch:
+    post:
+      consumes:
+      - multipart/form-data
+      description: user batch
+      parameters:
+      - description: file
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/delivery.BasicResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/delivery.BasicResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/delivery.BasicResponse'
+      summary: user batch
+      tags:
+      - user
+swagger: "2.0"
