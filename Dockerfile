@@ -16,7 +16,7 @@ RUN make init; make swagger; make mockery; make test; make build
 FROM alpine:3.12
 
 WORKDIR /app
-COPY --from=builder /app/bin/uploader .
+COPY --from=builder /app/bin/ecommerce .
 COPY --from=builder /app/docs .
 
-ENTRYPOINT [ "/app/uploader" ]
+ENTRYPOINT [ "/app/ecommerce" ]

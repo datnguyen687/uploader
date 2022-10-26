@@ -6,7 +6,7 @@ swagger:
 	swag init
 
 build:
-	go build -o ./bin/uploader ./main.go
+	go build -o ./bin/ecommerce ./main.go
 
 up:
 	docker-compose up --build -d

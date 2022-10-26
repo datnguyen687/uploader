@@ -24,17 +24,37 @@ paths:
       summary: ping
       tags:
       - healthcheck
-  /v1/user/batch:
-    post:
-      consumes:
-      - multipart/form-data
-      description: user batch
+  /v1/products:
+    get:
+      description: filter products
       parameters:
-      - description: file
-        in: formData
-        name: file
-        required: true
-        type: file
+      - description: brand
+        in: query
+        name: brand
+        type: string
+      - description: name
+        in: query
+        name: name
+        type: string
+      - description: priceFrom
+        in: query
+        name: priceFrom
+        type: integer
+      - description: priceTo
+        in: query
+        name: priceTo
+        type: integer
+      - description: orderBy
+        enum:
+        - brand:asc
+        - brand:desc
+        - name:asc
+        - name:desc
+        - price:asc
+        - price:desc
+        in: query
+        name: orderBy
+        type: string
       produces:
       - application/json
       responses:
@@ -50,7 +70,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/delivery.BasicResponse'
-      summary: user batch
+      summary: filter products
       tags:
-      - user
+      - products
 swagger: "2.0"

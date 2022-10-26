@@ -1,10 +1,10 @@
-# Uploader
+# Ecommerce
 
 Backend HTTP service
 
 ## Features
 
-- Backend REST API to upload a file to Google Cloud Storage
+- Backend REST API to handle ecommerce products
 
 ## Dependencies
 
@@ -37,22 +37,31 @@ make test
 ```sh
 make build
 ```
-7. Replace `<GCS_KEY_PATH>` and `<GCS_BUCKET_NAME>` in .env file with path to gcs key:
+7. Replace `<DB_...>` in .env file with real db connection info:
 ```sh
 % cat .env
 PORT=8080
 DEBUG=true
 SWAGGER_ENABLED=true
-GCS_KEY_PATH=<GCS_KEY_PATH>
-GCS_BUCKET_NAME=<GCS_BUCKET_NAME>
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=dat.nguyen
+DB_NAME=ecommerce
+DB_PASSWORD=password
 
 % source .env
 ```
 8. Run:
 ```sh
-./bin/uploader
+./bin/ecommerce
 ```
-
+9. To use docker-compose (optional):
+```sh
+make up // to start
+make down // to stop
+```
+10. To inject data, you can use the script under `./db/init.sql`
 ## Steps to check if it runs Ok:
 1. Check Swagger UI:
 ```sh
@@ -76,17 +85,42 @@ The response should be:
 ```
 
 ```sh
-curl -X 'POST' \
-  'http://localhost:8080/v1/user/batch' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: multipart/form-data' \
-  -F 'file=@payload.json;type=application/json'
+curl -X 'GET' \
+  'http://localhost:8080/v1/products' \
+  -H 'accept: application/json'
 ```
 The response should be:
 ```json
 {
   "code": 1,
   "message": "ok",
-  "error": ""
+  "error": "",
+  "data": [
+    {
+      "ID": 2,
+      "Name": "test name",
+      "Brand": "test brand",
+      "Price": 123,
+      "CreatedAt": "2022-10-24T15:23:56.875491Z",
+      "UpdatedAt": null
+    },
+    {
+      "ID": 3,
+      "Name": "test",
+      "Brand": "test brand",
+      "Price": 0.568505341224743,
+      "CreatedAt": "2022-10-26T12:12:55.284157Z",
+      "UpdatedAt": null
+    },
+    {
+      "ID": 4,
+      "Name": "test",
+      "Brand": "test brand",
+      "Price": 0.283186833389724,
+      "CreatedAt": "2022-10-26T12:14:01.614275Z",
+      "UpdatedAt": null
+    },
+    ...
+    ]
 }
 ```

@@ -2,17 +2,20 @@ package main
 
 import (
 	"context"
+	"ecommerce/internal/delivery"
+	"ecommerce/internal/repository"
+	"ecommerce/internal/usecase"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
-	"uploader/internal/delivery"
-	"uploader/internal/usecase"
-	"uploader/pkg/uploader/gcs"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func main() {
@@ -21,17 +24,37 @@ func main() {
 	port := viper.GetInt("PORT")
 	debug := viper.GetBool("DEBUG")
 	swaggerEnabled := viper.GetBool("SWAGGER_ENABLED")
-	gcsKeyPath := viper.GetString("GCS_KEY_PATH")
-	bucketName := viper.GetString("GCS_BUCKET_NAME")
 
-	// init gcs
-	client, err := gcs.NewGCS(gcsKeyPath, bucketName)
+	dbHost := viper.GetString("DB_HOST")
+	dbPort := viper.GetInt("DB_PORT")
+	dbUsername := viper.GetString("DB_USERNAME")
+	dbPassword := viper.GetString("DB_PASSWORD")
+	dbName := viper.GetString("DB_NAME")
+
+	// open db connection
+	dsn := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%d sslmode=disable",
+		dbHost,
+		dbUsername,
+		dbPassword,
+		dbName,
+		dbPort,
+	)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		logrus.WithError(err).Fatal("unable to init gcs")
+		logrus.WithError(err).Error("unable to open db connection")
+		os.Exit(1)
+	}
+
+	// repository
+	repo := repository.NewRepository(db)
+	if err := repo.AutoMigrate(); err != nil {
+		logrus.WithError(err).Error("unable to migrate")
+		os.Exit(1)
 	}
 
 	// usecase
-	uc := usecase.NewUsecase(client)
+	uc := usecase.NewUsecase(repo)
 
 	// init engine
 	engine := gin.Default()

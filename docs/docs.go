@@ -36,26 +36,54 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/user/batch": {
-            "post": {
-                "description": "user batch",
-                "consumes": [
-                    "multipart/form-data"
-                ],
+        "/v1/products": {
+            "get": {
+                "description": "filter products",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "products"
                 ],
-                "summary": "user batch",
+                "summary": "filter products",
                 "parameters": [
                     {
-                        "type": "file",
-                        "description": "file",
-                        "name": "file",
-                        "in": "formData",
-                        "required": true
+                        "type": "string",
+                        "description": "brand",
+                        "name": "brand",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "name",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "priceFrom",
+                        "name": "priceFrom",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "priceTo",
+                        "name": "priceTo",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "brand:asc",
+                            "brand:desc",
+                            "name:asc",
+                            "name:desc",
+                            "price:asc",
+                            "price:desc"
+                        ],
+                        "type": "string",
+                        "description": "orderBy",
+                        "name": "orderBy",
+                        "in": "query"
                     }
                 ],
                 "responses": {

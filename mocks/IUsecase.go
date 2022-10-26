@@ -4,7 +4,7 @@ package mocks
 
 import (
 	context "context"
-	io "io"
+	models "ecommerce/internal/models"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -14,18 +14,27 @@ type IUsecase struct {
 	mock.Mock
 }
 
-// Upload provides a mock function with given fields: ctx, name, data
-func (_m *IUsecase) Upload(ctx context.Context, name string, data io.Reader) error {
-	ret := _m.Called(ctx, name, data)
+// FilterProducts provides a mock function with given fields: ctx, filter, orderBy
+func (_m *IUsecase) FilterProducts(ctx context.Context, filter models.ProductFilter, orderBy string) ([]models.Product, error) {
+	ret := _m.Called(ctx, filter, orderBy)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, string, io.Reader) error); ok {
-		r0 = rf(ctx, name, data)
+	var r0 []models.Product
+	if rf, ok := ret.Get(0).(func(context.Context, models.ProductFilter, string) []models.Product); ok {
+		r0 = rf(ctx, filter, orderBy)
 	} else {
-		r0 = ret.Error(0)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]models.Product)
+		}
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, models.ProductFilter, string) error); ok {
+		r1 = rf(ctx, filter, orderBy)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 type mockConstructorTestingTNewIUsecase interface {

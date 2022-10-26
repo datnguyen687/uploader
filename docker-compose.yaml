@@ -1,7 +1,23 @@
 services:
-  uploader:
+  ecommerce_db:
+    image: postgres:latest
+    container_name: ecommerce_db
     restart: always
-    image: uploader:latest
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=admin
+    ports:
+      - 5440:5432
+    networks:
+      - my-network
+    volumes:
+      - ./db-data/:/var/lib/postgresql/data/
+
+  ecommerce:
+    restart: always
+    image: ecommerce:latest
+    depends_on:
+      - ecommerce_db
     build: "."
     ports:
       - 8080:8080
@@ -9,8 +25,11 @@ services:
       - SWAGGER_ENABLED=true
       - DEBUG=true
       - PORT=8080
-      - GCS_KEY_PATH=${GCS_KEY_PATH}
-      - GCS_BUCKET_NAME=${GCS_BUCKET_NAME}
+      - DB_HOST=ecommerce_db
+      - DB_PORT=5432
+      - DB_USERNAME=admin
+      - DB_NAME=postgres
+      - DB_PASSWORD=admin
     networks:
       - my-network
 

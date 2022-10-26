@@ -6,18 +6,16 @@ const (
 	StatusCodeOk      StatusCode = 1
 	StatusCodeUnknown StatusCode = 0
 
-	// user
-	StatusCodeUnableToBatchUser   StatusCode = -1000
-	StatusCodeBadBatchUserRequest StatusCode = -1001
+	StatusCodeUnableToFilterProducts   StatusCode = -1000
+	StatusCodeBadFilterProductsRequest StatusCode = -1001
 )
 
 var errorMapping map[StatusCode]string = map[StatusCode]string{
 	StatusCodeOk:      "ok",
 	StatusCodeUnknown: "unknown",
 
-	// user
-	StatusCodeUnableToBatchUser:   "unable to batch user",
-	StatusCodeBadBatchUserRequest: "bad batch user request",
+	StatusCodeUnableToFilterProducts:   "unable to filter products",
+	StatusCodeBadFilterProductsRequest: "bad filter products request",
 }
 
 func (sc StatusCode) Message() string {

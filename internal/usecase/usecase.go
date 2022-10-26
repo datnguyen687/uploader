@@ -2,20 +2,20 @@ package usecase
 
 import (
 	"context"
-	"io"
-	"uploader/pkg/uploader"
+	"ecommerce/internal/models"
+	"ecommerce/internal/repository"
 )
 
-func NewUsecase(uploader uploader.IUploader) *usecase {
+func NewUsecase(repo repository.IRepository) *usecase {
 	return &usecase{
-		uploader: uploader,
+		repo: repo,
 	}
 }
 
 type IUsecase interface {
-	Upload(ctx context.Context, name string, data io.Reader) error
+	FilterProducts(ctx context.Context, filter models.ProductFilter, orderBy string) ([]models.Product, error)
 }
 
 type usecase struct {
-	uploader uploader.IUploader
+	repo repository.IRepository
 }

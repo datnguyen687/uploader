@@ -5,16 +5,14 @@ import (
 	"fmt"
 	"net/http"
 
-	_ "uploader/docs"
-	"uploader/internal/usecase"
+	_ "ecommerce/docs"
+	"ecommerce/internal/usecase"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
-
-const maxFileSizeInBytes = 10240
 
 func NewHttpDelivery(uc usecase.IUsecase) *httpDelivery {
 	return &httpDelivery{
@@ -46,10 +44,11 @@ func (d *httpDelivery) Init(r *gin.Engine, debug, swaggerEnabled bool) error {
 	{
 		v1.GET("/ping", d.ping)
 
-		user := v1.Group("/user")
+		products := v1.Group("/products")
 		{
-			user.POST("/batch", d.batchUser)
+			products.GET("", d.handleProducts)
 		}
+
 	}
 
 	d.engine = r
